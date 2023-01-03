@@ -52,9 +52,7 @@ private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     @Override
     public void addDoctor() {
         Scanner A = new Scanner(System.in);
-        if (doctors.size()<= 10) {
-
-
+        if (doctors.size()!= 3) {
 
             try {
 
@@ -91,7 +89,7 @@ private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             }
         }
         doctors.remove(r1);
-        System.out.println("Doctor with Licence Number" + " " + licenceNum + "" + "successfully Deleted...");
+        System.out.println("Doctor with Licence Number" + " " + licenceNum + " " + "successfully Deleted...");
     }
 
     public void printDoctorList() {
@@ -149,7 +147,7 @@ private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                dateD = LocalDate.parse(filedata[2].trim(),formatter);
            }
 
-            doctors.add(new Doctor(filedata[0], filedata[1], dateD, Integer.parseInt(filedata[3].trim()), Integer.parseInt(filedata[4].trim()), filedata[5]));
+            doctors.add(new Doctor(filedata[0].trim(), filedata[1].trim(), dateD, Integer.parseInt(filedata[3].trim()), Integer.parseInt(filedata[4].trim()), filedata[5].trim()));
             System.out.println(Arrays.toString(filedata));
         }
         System.out.println("Data added Succesfully");
