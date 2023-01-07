@@ -1,17 +1,43 @@
 package com.company;
 
+import com.toedter.calendar.JDateChooser;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+import static java.lang.Integer.parseInt;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class patientDetailsGUI extends JFrame {
 
     private JTextField txt_Name;
     private JTextField txt_Surname;
-    private JTextField txt_dateOfbirth;
+    //private JTextField txt_dateOfbirth;
     private JTextField txt_mobileNum;
     private JTextField txt_patientId;
     private JTextArea txt_notes;
     private JButton button;
+    private JDateChooser dateChooser;
+    private JComboBox<String> hours;
+
+    JButton imageUploadButton = new JButton();
+    JLabel imgLabel = new JLabel();
+    JButton CbookingButton = new JButton();
+
+    ArrayList<Patient> patientList = new ArrayList<>();
+    //ArrayList<Consultation> consultations = new ArrayList<>();
+    ArrayList<Integer> cost = new ArrayList<>();
+
 
     public patientDetailsGUI(){
         initUI();
@@ -22,14 +48,15 @@ public class patientDetailsGUI extends JFrame {
         BorderLayout borderLayout = new BorderLayout();
 
         JLabel jl0 = new JLabel("ENTER PATIENT DETAILS");
-        jl0.setBounds(210,10,200,20);
+        jl0.setBounds(170,10,400,20);
+        jl0.setFont(new Font("Times New Roman", Font.BOLD, 20));
         add(jl0);
 
         JPanel jp1 = new JPanel();
         add(jp1,borderLayout.CENTER);
         jp1.setBorder(BorderFactory.createEmptyBorder(50,20,20,20));
 
-        GridLayout gridLayout = new GridLayout(7,2);
+        GridLayout gridLayout = new GridLayout(9,2);
         gridLayout.setVgap(10);
         jp1.setLayout(gridLayout);
 
@@ -44,9 +71,10 @@ public class patientDetailsGUI extends JFrame {
         jp1.add(txt_Surname);
 
         JLabel jl3 = new JLabel("Patient Date of Birth :");
-        txt_dateOfbirth = new JTextField(20);
+        dateChooser = new JDateChooser();
+        dateChooser.setBounds(150,90,200,20);
         jp1.add(jl3);
-        jp1.add(txt_dateOfbirth);
+        jp1.add(dateChooser);
 
         JLabel jl4 = new JLabel("Patient Mobile Number :");
         txt_mobileNum = new JTextField(20);
@@ -58,21 +86,174 @@ public class patientDetailsGUI extends JFrame {
         jp1.add(jl5);
         jp1.add(txt_patientId);
 
+        JLabel jl19 = new JLabel("Enter Consultation Duration(hours)");
+
+        Integer[] numbers = {1, 2, 3};
+        JComboBox<Integer> hours = new JComboBox<Integer>(numbers);
+        hours.setBounds(260,120,100,20);
+        jp1.add(jl19);
+        jp1.add(hours);
+
         JLabel jl6 = new JLabel("Additional Notes :");
         txt_notes = new JTextArea(10,20);
         jp1.add(jl6);
         jp1.add(txt_notes);
 
-        JLabel jl7 = new JLabel();
-        button = new JButton("Confirm Booking ");
-        jp1.add(jl7);
-        jp1.add(button);
+        JLabel jl8 = new JLabel();
+        imageUploadButton.setText("Upload images of the skin");
+        imageUploadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                chooser.showOpenDialog(null);
+                File file = chooser.getSelectedFile();
+                try {
+                    ImageIcon icon=new ImageIcon(ImageIO.read(new File(file.getAbsolutePath())));
+                    imgLabel.setIcon(icon);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        jp1.add(jl8);
+        jp1.add(imageUploadButton);
 
+        JLabel jl7 = new JLabel();
+        CbookingButton.setText("Confirm Your Booking");
+        CbookingButton.setFont(new Font("Calluna", Font.BOLD, 15));
+        CbookingButton.setBackground(Color.green);
+        CbookingButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = txt_Name.getText();
+                String surName = txt_Surname.getText();
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                Date dateOfBirth = dateChooser.getDate();
+                LocalDate dateD = null;
+
+                String mobileNotxt = txt_mobileNum.getText();
+                int mobileNum = parseInt(mobileNotxt);
+
+                String patientIdtxt = txt_patientId.getText();
+                int patientId = parseInt(patientIdtxt);
+
+                int consultationHours = (int) hours.getSelectedItem();
+
+               // String patientId = null;
+               // for (Consultation consultation : availableDoctorGUI.consultationArray )
+               // Double consultationCost = null;
+               // Double consultationCost = null;
+
+                /* Patient patients = new Patient(name, surName, dateD, mobileNum, patientId,consultationHours);
+
+                for (Patient p : patientList) {
+                    if (p.getPatientId().equals(patientId)) {
+                        patients.setConsultationcost(consultationHours * 25);
+                        p = patients;
+                        return;
+                    } else {
+                        patients.setConsultationcost(consultationHours * 15);
+                        patientList.add(patients);
+                    }
+                }*/
+                patientList.add(new Patient(name, surName, dateD, mobileNum, consultationHours,patientId));
+
+               /* if(patientList.contains(patientId)){
+                    int consultationcost = consultationHours * 25;
+                    cost.add(consultationcost);
+                }else {
+                    int consultationcost = consultationHours * 15;
+                    cost.add(consultationcost);
+                }*/
+
+
+
+               /* for(int i =0; i<patientList.size();i++){
+                    for (int j = i+1; j<patientList.size(); j++){
+                        if(patientList.get(i).getPatientId()==(patientList.get(j).getPatientId())){
+                            duplicates.add(patientList.get(i).getPatientId());
+                        }
+                    }
+                }*/
+                Set<String> patientIds = new HashSet<>();
+                try(BufferedReader reader = new BufferedReader(new FileReader("patient.txt"))){
+                    String line;
+                    while((line = reader.readLine()) != null){
+
+                        String[] fields = line.split(",");
+                        String setName = fields[0];
+                        String setSurName = fields[1];
+                        String setDate_Of_Birth = fields[2];
+                        String setMobileNum = fields[3];
+                        String setPatientId = fields[4];
+                        String setConsultationHours = fields[5];
+
+                        patientIds.add(setPatientId);
+
+                    }
+                }  catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                if(patientIds.isEmpty()){
+                    int consultationcost = consultationHours * 15;
+                    cost.add(consultationcost);
+                }else {
+                    int consultationcost = consultationHours * 25;
+                    cost.add(consultationcost);
+                }
+                int totalcost = 0;
+                for (int consultationcost : cost) {
+                    totalcost = consultationcost;
+                }
+
+                JOptionPane.showMessageDialog(rootPane, "Patient Name : " + name +
+                        "\nPatient Surname : " + surName +
+                        "\nPatient Date Of Birth: " + dateOfBirth +
+                        "\nPatient Mobile Number: " + mobileNum +
+                        "\nPatient ID: " + patientId +
+                        "\nConsultation Cost: " + totalcost + " £"+
+                        "\n\n Booking is completed");
+
+                clearForm();
+                patientSavefile();
+
+            }
+        });
+        jp1.add(jl7);
+        jp1.add(CbookingButton);
         setVisible(true);
+
 
     }
     public static void main(String[] args) {
         patientDetailsGUI patientDetailsGUI = new patientDetailsGUI();
         patientDetailsGUI.setVisible(true);
     }
+    public void clearForm(){
+        txt_Name.setText("");
+        txt_Surname.setText("");
+        txt_patientId.setText("");
+        txt_mobileNum.setText("");
+        dateChooser.setDate(null);
+        txt_notes.setText("");
+
+    }
+    public void patientSavefile() {
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("patient.txt",true));
+            for (Patient x : patientList) {
+                writer.write(x.getName() + " , " + x.getSurName() + " , " + x.getDate_Of_Birth() + " , " + x.getMobileNum() + " , " + x.getPatientId() + " , " + x.getConsultationHours());
+                writer.newLine();
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("\n Data is successfully stored");
+    }
+
+
 }

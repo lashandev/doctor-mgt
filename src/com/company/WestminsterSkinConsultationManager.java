@@ -9,7 +9,7 @@ import java.util.*;
 public class WestminsterSkinConsultationManager implements SkinConsultationManager {
 private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     ArrayList<Doctor> doctors = new ArrayList<>();
-    ArrayList<Consultation> consultations = new ArrayList<>();
+
 
     public static void main(String[] args) throws FileNotFoundException {
         Scanner D = new Scanner(System.in);
@@ -93,6 +93,12 @@ private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     public void printDoctorList() {
+        Collections.sort(doctors, new Comparator<Doctor>() {
+            @Override
+            public int compare(Doctor o1, Doctor o2) {
+                return o1.getSurName().compareTo(o2.getSurName());
+            }
+        });
         for (Doctor x : doctors) {
             System.out.println("Doctor name : " + x.getName() + " ");
             System.out.println("Doctor Surname : " + x.getSurName());

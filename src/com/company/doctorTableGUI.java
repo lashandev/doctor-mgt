@@ -51,6 +51,7 @@ public class doctorTableGUI extends JFrame {
         add(jScrollPane);
 
         JButton buttonAssignDoctor = new JButton("Assign Doctor");
+        buttonAssignDoctor.setBackground(Color.CYAN);
         buttonAssignDoctor.setBounds(25,310,200,30);
         add(buttonAssignDoctor);
 
@@ -62,6 +63,7 @@ public class doctorTableGUI extends JFrame {
         });
 
         JButton button_sort = new JButton("Sort Doctors to Ascending Order");
+        button_sort.setBackground(Color.CYAN);
         button_sort.setBounds(250,310,300,30);
         add(button_sort);
         button_sort.addActionListener(new ActionListener() {
