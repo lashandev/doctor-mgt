@@ -23,7 +23,7 @@ public class patientDetailsGUI extends JFrame {
     private JTextField txt_Name;
     private JTextField txt_Surname;
     //private JTextField txt_dateOfbirth;
-    private JTextField txt_mobileNum;
+    private JTextField txt_mobileNum,txt_LName,txt_Lnum;
     private JTextField txt_patientId;
     private JTextArea txt_notes;
     private JButton button;
@@ -43,6 +43,13 @@ public class patientDetailsGUI extends JFrame {
         initUI();
         setLocationRelativeTo(null);
     }
+
+    public patientDetailsGUI(Doctor doctor) {
+        this();
+        txt_Lnum.setText("" + doctor.getLicenceNum());
+        txt_LName.setText(doctor.getName());
+    }
+
     private void initUI(){
         setSize(600,400);
         BorderLayout borderLayout = new BorderLayout();
@@ -56,9 +63,19 @@ public class patientDetailsGUI extends JFrame {
         add(jp1,borderLayout.CENTER);
         jp1.setBorder(BorderFactory.createEmptyBorder(50,20,20,20));
 
-        GridLayout gridLayout = new GridLayout(9,2);
+        GridLayout gridLayout = new GridLayout(11,2);
         gridLayout.setVgap(10);
         jp1.setLayout(gridLayout);
+
+        JLabel jl01 = new JLabel("Doctor Lnum");
+        txt_Lnum = new JTextField(20);
+        jp1.add(jl01);
+        jp1.add(txt_Lnum);
+
+        JLabel jl02 = new JLabel("Doctor Name");
+        txt_LName = new JTextField(20);
+        jp1.add(jl02);
+        jp1.add(txt_LName);
 
         JLabel jl1 = new JLabel("Patient Name :");
         txt_Name = new JTextField(20);
@@ -140,72 +157,32 @@ public class patientDetailsGUI extends JFrame {
 
                 int consultationHours = (int) hours.getSelectedItem();
 
-               // String patientId = null;
-               // for (Consultation consultation : availableDoctorGUI.consultationArray )
-               // Double consultationCost = null;
-               // Double consultationCost = null;
-
-                /* Patient patients = new Patient(name, surName, dateD, mobileNum, patientId,consultationHours);
-
-                for (Patient p : patientList) {
-                    if (p.getPatientId().equals(patientId)) {
-                        patients.setConsultationcost(consultationHours * 25);
-                        p = patients;
-                        return;
-                    } else {
-                        patients.setConsultationcost(consultationHours * 15);
-                        patientList.add(patients);
-                    }
-                }*/
                 patientList.add(new Patient(name, surName, dateD, mobileNum, consultationHours,patientId));
 
-               /* if(patientList.contains(patientId)){
-                    int consultationcost = consultationHours * 25;
-                    cost.add(consultationcost);
-                }else {
-                    int consultationcost = consultationHours * 15;
-                    cost.add(consultationcost);
-                }*/
-
-
-
-               /* for(int i =0; i<patientList.size();i++){
-                    for (int j = i+1; j<patientList.size(); j++){
-                        if(patientList.get(i).getPatientId()==(patientList.get(j).getPatientId())){
-                            duplicates.add(patientList.get(i).getPatientId());
-                        }
-                    }
-                }*/
-                Set<String> patientIds = new HashSet<>();
+                boolean isFirstTime = true;
                 try(BufferedReader reader = new BufferedReader(new FileReader("patient.txt"))){
                     String line;
                     while((line = reader.readLine()) != null){
 
                         String[] fields = line.split(",");
-                        String setName = fields[0];
-                        String setSurName = fields[1];
-                        String setDate_Of_Birth = fields[2];
-                        String setMobileNum = fields[3];
                         String setPatientId = fields[4];
-                        String setConsultationHours = fields[5];
-
-                        patientIds.add(setPatientId);
+                        if(txt_patientId.getText().trim().equals(setPatientId.trim())){
+                            isFirstTime = false;
+                            break;
+                        }
 
                     }
                 }  catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                if(patientIds.isEmpty()){
-                    int consultationcost = consultationHours * 15;
-                    cost.add(consultationcost);
+                int consultationcost = 0;
+                if(isFirstTime){
+                    consultationcost = consultationHours * 15;
                 }else {
-                    int consultationcost = consultationHours * 25;
-                    cost.add(consultationcost);
+                    consultationcost = consultationHours * 25;
                 }
-                int totalcost = 0;
-                for (int consultationcost : cost) {
-                    totalcost = consultationcost;
-                }
+                int totalcost = consultationcost;
+
 
                 JOptionPane.showMessageDialog(rootPane, "Patient Name : " + name +
                         "\nPatient Surname : " + surName +

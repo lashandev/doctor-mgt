@@ -21,6 +21,8 @@ public class availableDoctorGUI extends JFrame {
     private JDateChooser dateChooser;
     private JComboBox<String> start,hours;
 
+    private Doctor doctor;
+
     ArrayList<Consultation> consultations = new ArrayList<>();
 
     public availableDoctorGUI(){
@@ -28,9 +30,10 @@ public class availableDoctorGUI extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public availableDoctorGUI(String dL){
+    public availableDoctorGUI(Doctor doctor){
         this();
-        labelName.setText(dL);
+        this.doctor = doctor;
+        labelName.setText(doctor.getName());
     }
 
     private void initUI() {
@@ -130,7 +133,7 @@ public class availableDoctorGUI extends JFrame {
     }
 
     private void bookDoctor(ActionEvent e) {
-        patientDetailsGUI patientDetailsGUI = new patientDetailsGUI();
+        patientDetailsGUI patientDetailsGUI = new patientDetailsGUI(doctor);
         patientDetailsGUI.setVisible(true);
         this.dispose();
     }
