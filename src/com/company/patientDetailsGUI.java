@@ -25,6 +25,8 @@ public class patientDetailsGUI extends JFrame {
     //private JTextField txt_dateOfbirth;
     private JTextField txt_mobileNum;
     private JTextField txt_patientId;
+    private JTextField txt_Lnum;
+    private JTextField txt_LName;
     private JTextArea txt_notes;
     private JButton button;
     private JDateChooser dateChooser;
@@ -56,9 +58,19 @@ public class patientDetailsGUI extends JFrame {
         add(jp1,borderLayout.CENTER);
         jp1.setBorder(BorderFactory.createEmptyBorder(50,20,20,20));
 
-        GridLayout gridLayout = new GridLayout(9,2);
+        GridLayout gridLayout = new GridLayout(11,2);
         gridLayout.setVgap(10);
         jp1.setLayout(gridLayout);
+
+        JLabel jl01 = new JLabel("Doctor Lnum");
+        txt_Lnum = new JTextField(20);
+        jp1.add(jl01);
+        jp1.add(txt_Lnum);
+
+        JLabel jl02 = new JLabel("Doctor Name");
+        txt_LName = new JTextField(20);
+        jp1.add(jl02);
+        jp1.add(txt_Lnum);
 
         JLabel jl1 = new JLabel("Patient Name :");
         txt_Name = new JTextField(20);
