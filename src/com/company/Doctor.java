@@ -9,8 +9,7 @@ public class Doctor extends Person{
     private String specialisation;
 
 
-
-
+    public Doctor(){}
     public Doctor(String name, String surName, LocalDate dateOfBirth, int mobileNum, int licenceNum, String specialisation) {
         super(name, surName, dateOfBirth, mobileNum);
         this.licenceNum = licenceNum;
@@ -18,12 +17,6 @@ public class Doctor extends Person{
     }
 
 
-    public Doctor(String licenceNum) {
-    }
-
-    public Doctor() {
-
-    }
 
 
     public void setLicenceNum(int licenceNum){
@@ -40,8 +33,4 @@ public class Doctor extends Person{
     }
 
 
-    public String setLicenceNum() {
-
-        return null;
-    }
 }
