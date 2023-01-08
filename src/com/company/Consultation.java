@@ -4,10 +4,22 @@ import java.util.Date;
 
 public class Consultation {
     private Doctor doctor;
-    private Date consultationDate;
-    private int consultationTime;
+    private String consultationDate;
+    private String consultationTime;
     private double consultationCost;
     private String consultationNotes;
+    private int consultationHour;
+
+
+
+    public Consultation(Doctor doctor, String consultationDate, String consultationTime) {
+        this.doctor = doctor;
+        this.consultationTime = consultationTime;
+        this.consultationDate =consultationDate;
+    }
+
+
+
 
     public Doctor getDoctor() {
         return doctor;
@@ -17,19 +29,20 @@ public class Consultation {
         this.doctor = doctor;
     }
 
-    public Date getConsultationDate() {
+    public String getConsultationDate() {
+
         return consultationDate;
     }
 
-    public void setConsultationDate(Date consultationDate) {
+    public void setConsultationDate(String consultationDate) {
         this.consultationDate = consultationDate;
     }
 
-    public int getConsultationTime() {
+    public String getConsultationTime() {
         return consultationTime;
     }
 
-    public void setConsultationTime(int consultationTime) {
+    public void setConsultationTime(String consultationTime) {
         this.consultationTime = consultationTime;
     }
 
@@ -56,8 +69,4 @@ public class Consultation {
     public void setConsultationHour(int consultationHour) {
         this.consultationHour = consultationHour;
     }
-
-    private int consultationHour;
-
-
 }

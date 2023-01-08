@@ -96,8 +96,8 @@ public class doctorTableGUI extends JFrame {
         int selectedRow = doctorTable.getSelectedRow();
         String dL = doctorTable.getValueAt(selectedRow, 0).toString();
         Doctor doctor = new Doctor();
-        doctor.setLicenceNum((Integer.parseInt(dL)));
-        String name = doctorTable.getValueAt(selectedRow, 1).toString() + " " + doctorTable.getValueAt(selectedRow, 2).toString();
+        doctor.setLicenceNum(Integer.parseInt(dL));
+        String name = doctorTable.getValueAt(selectedRow,1).toString() + " " + doctorTable.getValueAt(selectedRow,2).toString();
         doctor.setName(name);
         availableDoctorGUI availableDoctorGUI = new availableDoctorGUI(doctor);
         availableDoctorGUI.setVisible(true);

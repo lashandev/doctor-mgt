@@ -23,9 +23,11 @@ public class patientDetailsGUI extends JFrame {
     private JTextField txt_Name;
     private JTextField txt_Surname;
     //private JTextField txt_dateOfbirth;
-    private JTextField txt_mobileNum,txt_LName,txt_Lnum;
+    private JTextField txt_mobileNum;
     private JTextField txt_patientId;
     private JTextArea txt_notes;
+    private JTextField txt_Lnum;
+    private JTextField txt_Dname;
     private JButton button;
     private JDateChooser dateChooser;
     private JComboBox<String> hours;
@@ -36,7 +38,7 @@ public class patientDetailsGUI extends JFrame {
 
     ArrayList<Patient> patientList = new ArrayList<>();
     //ArrayList<Consultation> consultations = new ArrayList<>();
-    ArrayList<Integer> cost = new ArrayList<>();
+   // ArrayList<Integer> cost = new ArrayList<>();
 
 
     public patientDetailsGUI(){
@@ -46,16 +48,16 @@ public class patientDetailsGUI extends JFrame {
 
     public patientDetailsGUI(Doctor doctor) {
         this();
-        txt_Lnum.setText("" + doctor.getLicenceNum());
-        txt_LName.setText(doctor.getName());
+        txt_Lnum.setText(" " + doctor.getLicenceNum());
+        txt_Dname.setText(doctor.getName());
     }
 
     private void initUI(){
-        setSize(600,400);
+        setSize(700,500);
         BorderLayout borderLayout = new BorderLayout();
 
-        JLabel jl0 = new JLabel("ENTER PATIENT DETAILS");
-        jl0.setBounds(170,10,400,20);
+        JLabel jl0 = new JLabel("Enter Patient Details");
+        jl0.setBounds(200,10,400,20);
         jl0.setFont(new Font("Times New Roman", Font.BOLD, 20));
         add(jl0);
 
@@ -67,15 +69,15 @@ public class patientDetailsGUI extends JFrame {
         gridLayout.setVgap(10);
         jp1.setLayout(gridLayout);
 
-        JLabel jl01 = new JLabel("Doctor Lnum");
+        JLabel jl01 = new JLabel("Doctor Licence Number");
         txt_Lnum = new JTextField(20);
         jp1.add(jl01);
         jp1.add(txt_Lnum);
 
-        JLabel jl02 = new JLabel("Doctor Name");
-        txt_LName = new JTextField(20);
+        JLabel jl02 = new JLabel("Doctor Full Name");
+        txt_Dname = new JTextField(20);
         jp1.add(jl02);
-        jp1.add(txt_LName);
+        jp1.add(txt_Dname);
 
         JLabel jl1 = new JLabel("Patient Name :");
         txt_Name = new JTextField(20);
@@ -142,6 +144,9 @@ public class patientDetailsGUI extends JFrame {
         CbookingButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                String licenceNum = txt_Lnum.getText();
+                String dname = txt_Dname.getText();
                 String name = txt_Name.getText();
                 String surName = txt_Surname.getText();
 
@@ -157,17 +162,55 @@ public class patientDetailsGUI extends JFrame {
 
                 int consultationHours = (int) hours.getSelectedItem();
 
+               // String patientId = null;
+               // for (Consultation consultation : availableDoctorGUI.consultationArray )
+               // Double consultationCost = null;
+               // Double consultationCost = null;
+
+                /* Patient patients = new Patient(name, surName, dateD, mobileNum, patientId,consultationHours);
+
+                for (Patient p : patientList) {
+                    if (p.getPatientId().equals(patientId)) {
+                        patients.setConsultationcost(consultationHours * 25);
+                        p = patients;
+                        return;
+                    } else {
+                        patients.setConsultationcost(consultationHours * 15);
+                        patientList.add(patients);
+                    }
+                }*/
                 patientList.add(new Patient(name, surName, dateD, mobileNum, consultationHours,patientId));
 
-                boolean isFirstTime = true;
+               /* if(patientList.contains(patientId)){
+                    int consultationcost = consultationHours * 25;
+                    cost.add(consultationcost);
+                }else {
+                    int consultationcost = consultationHours * 15;
+                    cost.add(consultationcost);
+                }*/
+
+
+
+               /* for(int i =0; i<patientList.size();i++){
+                    for (int j = i+1; j<patientList.size(); j++){
+                        if(patientList.get(i).getPatientId()==(patientList.get(j).getPatientId())){
+                            duplicates.add(patientList.get(i).getPatientId());
+                        }
+                    }
+                }*/
+                Set<String> patientIds = new HashSet<>();
+                boolean isfirstTime = true;
                 try(BufferedReader reader = new BufferedReader(new FileReader("patient.txt"))){
                     String line;
                     while((line = reader.readLine()) != null){
 
                         String[] fields = line.split(",");
                         String setPatientId = fields[4];
-                        if(txt_patientId.getText().trim().equals(setPatientId.trim())){
-                            isFirstTime = false;
+
+
+                        patientIds.add(setPatientId.trim());
+                        if ((txt_patientId.getText().trim().equals(setPatientId.trim()))){
+                            isfirstTime = false;
                             break;
                         }
 
@@ -175,22 +218,24 @@ public class patientDetailsGUI extends JFrame {
                 }  catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                int consultationcost = 0;
-                if(isFirstTime){
+
+                    int consultationcost = 0;
+                if(isfirstTime){
                     consultationcost = consultationHours * 15;
                 }else {
                     consultationcost = consultationHours * 25;
                 }
                 int totalcost = consultationcost;
 
-
-                JOptionPane.showMessageDialog(rootPane, "Patient Name : " + name +
+                JOptionPane.showMessageDialog(rootPane, "Doctor Licence Number : " + licenceNum +
+                        "\nDoctor Full Name: "+ dname +
+                        "\nPatient Name : " + name +
                         "\nPatient Surname : " + surName +
                         "\nPatient Date Of Birth: " + dateOfBirth +
                         "\nPatient Mobile Number: " + mobileNum +
                         "\nPatient ID: " + patientId +
                         "\nConsultation Cost: " + totalcost + " £"+
-                        "\n\n Booking is completed");
+                        "\n\n Booking is completed Thank You!");
 
                 clearForm();
                 patientSavefile();
