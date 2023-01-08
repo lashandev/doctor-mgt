@@ -130,7 +130,7 @@ public class DocterView extends JFrame {
             if (filedata[2]!=null){
                 dateD = LocalDate.parse(filedata[2].trim(),formatter);
             }
-            doctors.add(new Doctor(filedata[0].trim(), filedata[1].trim(), dateD, Integer.parseInt(filedata[3].trim()), Integer.parseInt(filedata[4].trim()), filedata[5]));
+            doctors.add(new Doctor(filedata[0].trim(), filedata[1].trim(), dateD, Integer.parseInt(filedata[3].trim()), filedata[4].trim(), filedata[5]));
         }
     }
 

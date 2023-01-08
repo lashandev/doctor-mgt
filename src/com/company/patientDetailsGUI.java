@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -31,6 +32,9 @@ public class patientDetailsGUI extends JFrame {
     private JButton button;
     private JDateChooser dateChooser;
     private JComboBox<String> hours;
+    private String consultDate;
+
+    private String time;
 
     JButton imageUploadButton = new JButton();
     JLabel imgLabel = new JLabel();
@@ -46,10 +50,12 @@ public class patientDetailsGUI extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public patientDetailsGUI(Doctor doctor) {
+    public patientDetailsGUI(Doctor doctor, String consultDate, String time) {
         this();
         txt_Lnum.setText(" " + doctor.getLicenceNum());
         txt_Dname.setText(doctor.getName());
+        this.consultDate = consultDate;
+        this.time = time;
     }
 
     private void initUI(){
@@ -150,7 +156,7 @@ public class patientDetailsGUI extends JFrame {
                 String name = txt_Name.getText();
                 String surName = txt_Surname.getText();
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date dateOfBirth = dateChooser.getDate();
                 LocalDate dateD = null;
 
@@ -162,58 +168,25 @@ public class patientDetailsGUI extends JFrame {
 
                 int consultationHours = (int) hours.getSelectedItem();
 
-               // String patientId = null;
-               // for (Consultation consultation : availableDoctorGUI.consultationArray )
-               // Double consultationCost = null;
-               // Double consultationCost = null;
-
-                /* Patient patients = new Patient(name, surName, dateD, mobileNum, patientId,consultationHours);
-
-                for (Patient p : patientList) {
-                    if (p.getPatientId().equals(patientId)) {
-                        patients.setConsultationcost(consultationHours * 25);
-                        p = patients;
-                        return;
-                    } else {
-                        patients.setConsultationcost(consultationHours * 15);
-                        patientList.add(patients);
-                    }
-                }*/
+            
                 patientList.add(new Patient(name, surName, dateD, mobileNum, consultationHours,patientId));
 
-               /* if(patientList.contains(patientId)){
-                    int consultationcost = consultationHours * 25;
-                    cost.add(consultationcost);
-                }else {
-                    int consultationcost = consultationHours * 15;
-                    cost.add(consultationcost);
-                }*/
-
-
-
-               /* for(int i =0; i<patientList.size();i++){
-                    for (int j = i+1; j<patientList.size(); j++){
-                        if(patientList.get(i).getPatientId()==(patientList.get(j).getPatientId())){
-                            duplicates.add(patientList.get(i).getPatientId());
-                        }
-                    }
-                }*/
                 Set<String> patientIds = new HashSet<>();
                 boolean isfirstTime = true;
                 try(BufferedReader reader = new BufferedReader(new FileReader("patient.txt"))){
                     String line;
                     while((line = reader.readLine()) != null){
+                        if(line != null && !line.trim().equals("")) {
+                            String[] fields = line.split(",");
+                            String setPatientId = fields[4];
 
-                        String[] fields = line.split(",");
-                        String setPatientId = fields[4];
 
-
-                        patientIds.add(setPatientId.trim());
-                        if ((txt_patientId.getText().trim().equals(setPatientId.trim()))){
-                            isfirstTime = false;
-                            break;
+                            patientIds.add(setPatientId.trim());
+                            if ((txt_patientId.getText().trim().equals(setPatientId.trim()))) {
+                                isfirstTime = false;
+                                break;
+                            }
                         }
-
                     }
                 }  catch (IOException ex) {
                     ex.printStackTrace();
@@ -231,14 +204,15 @@ public class patientDetailsGUI extends JFrame {
                         "\nDoctor Full Name: "+ dname +
                         "\nPatient Name : " + name +
                         "\nPatient Surname : " + surName +
-                        "\nPatient Date Of Birth: " + dateOfBirth +
+                        "\nPatient Date Of Birth: " + sdf.format(dateOfBirth) +
                         "\nPatient Mobile Number: " + mobileNum +
                         "\nPatient ID: " + patientId +
                         "\nConsultation Cost: " + totalcost + " £"+
                         "\n\n Booking is completed Thank You!");
 
-                clearForm();
                 patientSavefile();
+                saveConsultation();
+                clearForm();
 
             }
         });
@@ -266,7 +240,7 @@ public class patientDetailsGUI extends JFrame {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("patient.txt",true));
             for (Patient x : patientList) {
-                writer.write(x.getName() + " , " + x.getSurName() + " , " + x.getDate_Of_Birth() + " , " + x.getMobileNum() + " , " + x.getPatientId() + " , " + x.getConsultationHours());
+                writer.write(x.getName() + ", " + x.getSurName() + "," + x.getDate_Of_Birth() + "," + x.getMobileNum() + "," + x.getPatientId() + "," + x.getConsultationHours());
                 writer.newLine();
             }
 
@@ -275,6 +249,27 @@ public class patientDetailsGUI extends JFrame {
             e.printStackTrace();
         }
         System.out.println("\n Data is successfully stored");
+    }
+
+    public void saveConsultation() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("booking.txt",true));
+
+                String line = "";
+                line += txt_Lnum.getText()+ ",";
+                line += consultDate+ ",";
+                line += time + ",";
+//                line += hours.getSelectedItem() + ",";
+                line += txt_patientId.getText();
+                writer.write(line);
+                writer.newLine();
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("data saved ");
+
     }
 
 

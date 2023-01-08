@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Doctor extends Person{
-    private int licenceNum;
+    private String licenceNum;
     private String specialisation;
 
 
 
 
-    public Doctor(String name, String surName, LocalDate dateOfBirth, int mobileNum, int licenceNum, String specialisation) {
+    public Doctor(String name, String surName, LocalDate dateOfBirth, int mobileNum, String licenceNum, String specialisation) {
         super(name, surName, dateOfBirth, mobileNum);
         this.licenceNum = licenceNum;
         this.specialisation = specialisation;
@@ -19,6 +19,7 @@ public class Doctor extends Person{
 
 
     public Doctor(String licenceNum) {
+        this.licenceNum = licenceNum;
     }
 
     public Doctor() {
@@ -26,10 +27,10 @@ public class Doctor extends Person{
     }
 
 
-    public void setLicenceNum(int licenceNum){
+    public void setLicenceNum(String licenceNum){
         this.licenceNum = licenceNum;
     }
-    public int getLicenceNum(){
+    public String getLicenceNum(){
         return licenceNum;
     }
     public void setSpecialisation(String specialisation){
@@ -39,9 +40,4 @@ public class Doctor extends Person{
         return specialisation;
     }
 
-
-    public String setLicenceNum() {
-
-        return null;
-    }
 }

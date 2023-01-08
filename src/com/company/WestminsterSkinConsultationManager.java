@@ -57,7 +57,7 @@ private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
 
                 System.out.println("Enter Licence Number :");
-                int licenceNum = A.nextInt();
+                String licenceNum = A.next();
                 System.out.println("Enter doctor's specialisation");
                 String specialisation = A.next();
                 System.out.println("Enter doctor name :");
@@ -81,10 +81,10 @@ private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     public void deleteDoctor() {
         Scanner R = new Scanner(System.in);
         System.out.println("Enter Doctor Licence Number :");
-        int licenceNum = R.nextInt();
+        String licenceNum = R.next();
         Doctor r1 = null;
         for (Doctor x : doctors) {
-            if (x.getLicenceNum() == (licenceNum)) {
+            if (x.getLicenceNum().equals(licenceNum.trim())) {
                 r1 = x;
             }
         }
@@ -153,7 +153,7 @@ private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                dateD = LocalDate.parse(filedata[2].trim(),formatter);
            }
 
-            doctors.add(new Doctor(filedata[0].trim(), filedata[1].trim(), dateD, Integer.parseInt(filedata[3].trim()), Integer.parseInt(filedata[4].trim()), filedata[5].trim()));
+            doctors.add(new Doctor(filedata[0].trim(), filedata[1].trim(), dateD, Integer.parseInt(filedata[3].trim()), filedata[4].trim(), filedata[5].trim()));
             System.out.println(Arrays.toString(filedata));
         }
         System.out.println("Data added Succesfully");

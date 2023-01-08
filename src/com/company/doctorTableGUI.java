@@ -96,7 +96,7 @@ public class doctorTableGUI extends JFrame {
         int selectedRow = doctorTable.getSelectedRow();
         String dL = doctorTable.getValueAt(selectedRow, 0).toString();
         Doctor doctor = new Doctor();
-        doctor.setLicenceNum(Integer.parseInt(dL));
+        doctor.setLicenceNum(dL);
         String name = doctorTable.getValueAt(selectedRow,1).toString() + " " + doctorTable.getValueAt(selectedRow,2).toString();
         doctor.setName(name);
         availableDoctorGUI availableDoctorGUI = new availableDoctorGUI(doctor);
@@ -135,7 +135,7 @@ public class doctorTableGUI extends JFrame {
             if (filedata[2]!=null){
                 dateD = LocalDate.parse(filedata[2].trim(),formatter);
             }
-            doctors.add(new Doctor(filedata[0].trim(), filedata[1].trim(), dateD, Integer.parseInt(filedata[3].trim()), Integer.parseInt(filedata[4].trim()), filedata[5].trim()));
+            doctors.add(new Doctor(filedata[0].trim(), filedata[1].trim(), dateD, Integer.parseInt(filedata[3].trim()), filedata[4].trim(), filedata[5].trim()));
         }
     }
 

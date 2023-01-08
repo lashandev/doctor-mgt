@@ -10,7 +10,17 @@ public class Consultation {
     private String consultationNotes;
     private int consultationHour;
 
+    public Patient getPatient() {
+        return patient;
+    }
 
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    private Patient patient;
+
+    public Consultation(){}
 
     public Consultation(Doctor doctor, String consultationDate, String consultationTime) {
         this.doctor = doctor;

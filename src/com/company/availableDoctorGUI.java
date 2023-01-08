@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,11 +18,11 @@ import static java.lang.Integer.parseInt;
 
 public class availableDoctorGUI extends JFrame {
 
-    ArrayList<Consultation> consultations = readConsultationFromFile("booking.txt");
-    ArrayList<Doctor> doctors = readDoctorsFromFile("test.txt");
+    ArrayList<Consultation> consultations;
+    ArrayList<Doctor> doctors;
 
     private static String[] parts;
-    private JLabel labelName;
+    private JLabel labelName, label5;
     private JLabel labelId;
     private JTextField txt_date;
     private JTextField txt_time;
@@ -29,11 +30,13 @@ public class availableDoctorGUI extends JFrame {
     private JComboBox<String> start,hours;
     private Doctor doctor;
 
-    ArrayList<Consultation> consultations = new ArrayList<>();
-
     public availableDoctorGUI(){
         initUI();
         setLocationRelativeTo(null);
+        doctors = new ArrayList<>();
+        readDoctorsFromFile("test.txt");
+        consultations = new ArrayList<>();
+        readConsultationFromFile("booking.txt");
     }
 
     public availableDoctorGUI(Doctor doctor){
@@ -118,46 +121,12 @@ public class availableDoctorGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                Date consultationDate = dateChooser.getDate();
-                LocalDate dateD = null;
-
-                String consultationTime = (String) start.getSelectedItem();
-
-                int consultationHours = (int) hours.getSelectedItem();
-
-                int licenceNum = 0;
-                labelId.setText(doctor.setLicenceNum());
-
-                consultations.add(new Consultation(doctor ,consultationDate, consultationTime));
-
-
-
-                boolean doctorAvailable = true;
-                for (Consultation consultation : consultations){
-                    if (consultation.getDoctor().equals(licenceNum)&&
-                    consultation.getConsultationDate().equals(consultationDate)&&consultation.getConsultationTime().trim().equals(consultationTime)){
-                        doctorAvailable = false;
-                        break;
-                    }
-                    if (!doctorAvailable){
-                        System.out.println("Doctor is not available");
-                        Random random = new Random();
-                        int recommendedDoctorIndex = random.nextInt(doctors.size());
-                        Doctor recommendedDoctor = doctors.get(recommendedDoctorIndex);
-
-                    }
-                    if (doctorAvailable){
-                        System.out.println("Dpctor is available");
-                    }
-                }
-
-                saveConsultation();
+                checkAvailability();
             }
         });
 
 
-        JLabel label5 = new JLabel("Your Doctor is Available");
+        label5 = new JLabel("");
         label5.setBounds(10,270,200,20);
         add(label5);
 
@@ -176,9 +145,16 @@ public class availableDoctorGUI extends JFrame {
     }
 
     private void bookDoctor(ActionEvent e) {
-        patientDetailsGUI patientDetailsGUI = new patientDetailsGUI(doctor);
-        patientDetailsGUI.setVisible(true);
-        this.dispose();
+        boolean availability = checkAvailability();
+        if(availability) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            patientDetailsGUI patientDetailsGUI = new patientDetailsGUI(doctor,
+                    sdf.format(dateChooser.getDate()), start.getSelectedItem().toString());
+            patientDetailsGUI.setVisible(true);
+            this.dispose();
+        }else{
+            JOptionPane.showMessageDialog(this, "Doctor is not available..!");
+        }
     }
 
     public static void main(String[] args) {
@@ -186,28 +162,14 @@ public class availableDoctorGUI extends JFrame {
         availableDoctorGUI.setVisible(true);
     }
 
-    public void saveConsultation() {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("booking.txt",true));
-            for (Consultation x : consultations) {
-                writer.write(x.getConsultationDate() + " , " + x.getConsultationTime() + " , " + x.getConsultationHour());
-                writer.newLine();
-            }
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("data saved ");
 
-    }
-    public static ArrayList<Doctor> readDoctorsFromFile(String fileName){
-        ArrayList<Doctor> doctors = new ArrayList<>();
+    public ArrayList<Doctor> readDoctorsFromFile(String fileName){
         try(Scanner scanner = new Scanner(new File(fileName))){
             while (scanner.hasNextLine()){
                 String line = scanner.nextLine();
                 String[] parts = line.split(",");
-                String licenceNum = parts[0];
-                Doctor doctor = new Doctor(licenceNum);
+                String licenceNum = parts[4];
+                Doctor doctor = new Doctor(licenceNum.trim());
                 doctors.add(doctor);
             }
         } catch (FileNotFoundException e) {
@@ -217,18 +179,20 @@ public class availableDoctorGUI extends JFrame {
         return doctors;
     }
     private ArrayList<Consultation> readConsultationFromFile(String fileName) {
-        ArrayList <Consultation> consultations = new ArrayList<>();
         try(Scanner scanner = new Scanner(new File(fileName))){
             while (scanner.hasNextLine()){
                 String line = scanner.nextLine();
-                String[] parts = line.split(",");
-                String doctorLicenceNum = parts[0];
-                String consultationDate = parts[1];
-                String consultationTime = parts[2];
-                Doctor doctor = findDoctorById(doctors, doctorLicenceNum);
-                Consultation consultation = new Consultation(doctor,consultationDate,consultationTime);
+                if(line != null && !line.trim().equals("")) {
+                    String[] parts = line.split(",");
+                    String doctorLicenceNum = parts[0];
+                    String consultationDate = parts[1];
+                    String consultationTime = parts[2];
 
-                consultations.add(consultation);
+                    Doctor doctor = findDoctorById(doctors, doctorLicenceNum.trim());
+                    Consultation consultation = new Consultation(doctor, consultationDate, consultationTime);
+
+                    consultations.add(consultation);
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -237,13 +201,43 @@ public class availableDoctorGUI extends JFrame {
     }
     public static Doctor findDoctorById(ArrayList<Doctor> doctors,String licenceNum){
         for(Doctor doctor : doctors){
-            if(doctor.getLicenceNum().equals(licenceNum)){
+            if(doctor.getLicenceNum().trim().equals(licenceNum.trim())){
                 return doctor;
             }
         }
         return null;
     }
 
+    public boolean checkAvailability(){
+        String docLic = doctor.getLicenceNum().trim();
 
+        Date consultationDate = dateChooser.getDate();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String consultStringDate = null;
+        if (consultationDate != null) {
+            consultStringDate = sdf.format(consultationDate).trim();
+        }
+
+        String consultationTime = start.getSelectedItem().toString().trim();
+
+        boolean doctorAvailable = true;
+        for (Consultation consultation : consultations){
+            if (consultation.getDoctor().getLicenceNum().trim().equals(docLic)&&
+                    consultation.getConsultationDate().trim().equals(consultStringDate) &&
+                    consultation.getConsultationTime().trim().equals(consultationTime)){
+                doctorAvailable = false;
+                break;
+            }
+        }
+        if (!doctorAvailable){
+            System.out.println("Doctor is not available");
+            label5.setText("Your Doctor is Not Available");
+        }else{
+            label5.setText("Your Doctor is Available");
+
+        }
+
+        return doctorAvailable;
+    }
 
 }
