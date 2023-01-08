@@ -1,53 +1,72 @@
 package com.company;
 
-import java.sql.Time;
 import java.util.Date;
 
 public class Consultation {
     private Doctor doctor;
-    private Date consultationDate;
-    private int consultationTime;
-    private int consultationCost;
+    private String consultationDate;
+    private String consultationTime;
+    private double consultationCost;
     private String consultationNotes;
-    private String consultationHour;
+    private int consultationHour;
 
-    public Consultation(int consultationCost){
+
+
+    public Consultation(Doctor doctor, String consultationDate, String consultationTime) {
         this.doctor = doctor;
-        this.consultationHour = consultationHour;
-        this.consultationCost = consultationCost;
+        this.consultationTime = consultationTime;
+        this.consultationDate =consultationDate;
     }
 
-    public void setConsultationDate(Date consultationDate){
 
-        this.consultationDate= consultationDate;
+
+
+    public Doctor getDoctor() {
+        return doctor;
     }
-    public Date getConsultationDate(){
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    public String getConsultationDate() {
 
         return consultationDate;
     }
-    public void setConsultationTime(Time consultationDate){
-        this.consultationTime= consultationTime;
 
+    public void setConsultationDate(String consultationDate) {
+        this.consultationDate = consultationDate;
     }
-    public Time getConsultationTime(){
 
+    public String getConsultationTime() {
         return consultationTime;
     }
-    public void setConsultationCost(int consultationCost){
 
-        this.consultationCost= consultationCost;
+    public void setConsultationTime(String consultationTime) {
+        this.consultationTime = consultationTime;
     }
-    public int getConsultationCost(){
 
+    public double getConsultationCost() {
         return consultationCost;
     }
-    public void setConsultationNotes(String consultationNotes){
 
-        this.consultationNotes= consultationNotes;
+    public void setConsultationCost(double consultationCost) {
+        this.consultationCost = consultationCost;
     }
-    public String getConsultationNotes(){
 
+    public String getConsultationNotes() {
         return consultationNotes;
     }
 
+    public void setConsultationNotes(String consultationNotes) {
+        this.consultationNotes = consultationNotes;
+    }
+
+    public int getConsultationHour() {
+        return consultationHour;
+    }
+
+    public void setConsultationHour(int consultationHour) {
+        this.consultationHour = consultationHour;
+    }
 }

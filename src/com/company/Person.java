@@ -9,6 +9,10 @@ public class Person {
     private LocalDate dateOfBirth;
     private int mobileNum;
 
+    public Person(){
+
+    }
+
 
     public Person(String name, String surName, LocalDate dateOfBirth, int mobileNum) {
         this.name = name;
